@@ -165,9 +165,9 @@ float isoval(float SEG[], float x, float y, float z, int s[]){
 
 
 /* 
- * MAINFUNCTION [D,I] = cat_vol_eidist(B,L,vx_vol,euclid,csf,setnan,verb])
+ * MAINFUNCTION [D,II] = cat_vol_eidist(B,L,vx_vol,euclid,csf,setnan,verb])
  */
-void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S, int euclid, int csf, int setnan, int verb) {
+void vol_eidist(float *D, unsigned int *II, float *B, float *L, int *sL, float *S, int euclid, int csf, int setnan, int verb) {
   const int nL = sL[0]*sL[1]*sL[2];
   const int x  = (int)sL[0];
   const int y  = (int)sL[1];
@@ -227,7 +227,7 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
     if ( isinf(B[i]) && B[i]<0.0 ) B[i] = FNAN;                       /* voxel to ignore */
     if ( B[i]>1.0 ) B[i] = 1.0;                                         /* normalize object */
     if ( B[i]<0.0 ) B[i] = 0.0;                                         /* normalize object */
-    I[i] = (unsigned int) i;                                            /* initialize index map */
+    II[i] = (unsigned int) i;                                            /* initialize index map */
     
     if ( L[i]<=0.0 || isnan(B[i]) || isnan(L[i]) ) 
       D[i] = FNAN;
@@ -240,7 +240,7 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
    * for all points if there is no object.
    */
   if ( vx==0 ) { 
-    for (i=0;i<nL;i++) { D[i]=nanres; I[i]=(unsigned int)i+1; } 
+    for (i=0;i<nL;i++) { D[i]=nanres; II[i]=(unsigned int)i+1; } 
     printf("WARNING:cat_vol_eidist: Found no object for distance estimation!\n");
     return;
   }
@@ -267,7 +267,7 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
               
               if ( fabs(D[ni])>DIN ) {
                 D[ni] = -DIN; 
-                I[ni] = I[i];
+                II[ni] = II[i];
               }
            
           }
@@ -315,7 +315,7 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
             if ( fabs(D[ni])>DIN ) {
               if (D[ni]>0.0) nC++;
               D[ni] = -DIN; 
-              I[ni] = I[i];
+              II[ni] = II[i];
             }
           }
         }
@@ -352,7 +352,7 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
             if ( fabs(D[ni])>DIN ) {
               if (D[ni]>0.0) nC++;
               D[ni] = -DIN; 
-              I[ni] = I[i];
+              II[ni] = II[i];
             }
           }
         }
@@ -383,19 +383,19 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
 
 
   /*
-   * Euclidean distance estimation based on the nearest voxel in I.
+   * Euclidean distance estimation based on the nearest voxel in II.
    */
   if ( verb ) printf("  Euclidean distance estimation \n"); 
   if ( euclid ) {
     for (i=0;i<nL;i++) { 
-      if ( isnan(B[i])==0 && isinf(B[i])==0 && D[i]>0.0 && I[i]!=(unsigned int)i ) { 
+      if ( isnan(B[i])==0 && isinf(B[i])==0 && D[i]>0.0 && II[i]!=(unsigned int)i ) { 
 
-        ni = (int) I[i];
+        ni = (int) II[i];
 
         ind2sub(ni,&nu,&nv,&nw,nL,xy,x);
         ind2sub(i ,&iu,&iv,&iw,nL,xy,x);
 
-        /* standard euclidean distance between i and closest object point I[i] */
+        /* standard euclidean distance between i and closest object point II[i] */
         dinu = (float)iu - (float)nu; dinu *= s1;
         dinv = (float)iv - (float)nv; dinv *= s2;
         dinw = (float)iw - (float)nw; dinw *= s3;
@@ -464,7 +464,7 @@ void vol_eidist(float *D, unsigned int *I, float *B, float *L, int *sL, float *S
   if ( verb ) printf("  Final corrections \n");  
   for (i=0;i<nL;i++) { 
     /* correct for matlab index */
-    if ( I[i]>0 ) I[i]++; else I[i]=1;                        
+    if ( II[i]>0 ) II[i]++; else II[i]=1;                        
 
     /* correction of non-visited or other incorrect voxels */ 
     /* if ( D[i]<0.0 || isnan(D[i]) || isinf(D[i]) ) D[i]=nanres; */

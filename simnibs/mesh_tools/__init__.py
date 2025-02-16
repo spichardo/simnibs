@@ -3,5 +3,5 @@ SimNIBS mesh handling functions
 
 '''
 
-from .mesh_io import *
-from .eeg_positions import *
+from .mesh_io_min import *
+# from .eeg_positions import *

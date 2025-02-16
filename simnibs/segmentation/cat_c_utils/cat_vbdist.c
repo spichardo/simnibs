@@ -56,7 +56,7 @@ void ind2sub_vb(int i, int *x, int *y, int *z, int sxy, int sy) {
 }
 
 /* main function */
-void vbdist(float *D, unsigned int *I, unsigned char *L, float *V, unsigned char *R, int *sL, float *S){
+void vbdist(float *D, unsigned int *II, unsigned char *L, float *V, unsigned char *R, int *sL, float *S){
   /* main informations about input data (size, dimensions, ...) */
   const int     nL = sL[0]*sL[1]*sL[2];
   const int     x  = (int)sL[0];
@@ -95,7 +95,7 @@ void vbdist(float *D, unsigned int *I, unsigned char *L, float *V, unsigned char
       
     }
     L[i]=(unsigned char) ceil(V[i]);
-    I[i]=(unsigned int)i;
+    II[i]=(unsigned int)i;
   }
 
   int u,v,w,nu,nv,nw; 
@@ -120,9 +120,9 @@ void vbdist(float *D, unsigned int *I, unsigned char *L, float *V, unsigned char
       /* update values */
       if (DNi>0) {
         L[i] = L[i+NI[DNi]];
-        I[i] = (unsigned int) I[i+NI[DNi]];
+        II[i] = (unsigned int) II[i+NI[DNi]];
         D[i] = DNm; 
-        ind2sub_vb((int)I[i],&nu,&nv,&nw,xy,x); 
+        ind2sub_vb((int)II[i],&nu,&nv,&nw,xy,x); 
         D[i] = sqrt(pow((float)(u-nu)*s1,2) + pow((float)(v-nv)*s2,2) + pow((float)(w-nw)*s3,2));
         /* hier muss die genauerer Berechnung mit pve rein! */
       }
@@ -150,9 +150,9 @@ void vbdist(float *D, unsigned int *I, unsigned char *L, float *V, unsigned char
       /* update values */
       if (DNi>0) {
         L[i] = L[i-NI[DNi]];
-        I[i] = (unsigned int)  I[i-NI[DNi]];
+        II[i] = (unsigned int)  II[i-NI[DNi]];
         D[i] = DNm; 
-        ind2sub_vb((int)I[i],&nu,&nv,&nw,xy,x); 
+        ind2sub_vb((int)II[i],&nu,&nv,&nw,xy,x); 
         D[i] = sqrt(pow((float)(u-nu)*s1,2) + pow((float)(v-nv)*s2,2) + pow((float)(w-nw)*s3,2));
       }
     }
@@ -162,9 +162,9 @@ void vbdist(float *D, unsigned int *I, unsigned char *L, float *V, unsigned char
   /* euclidean calcuation + PVE information */
   for (i=0;i<nL;i++) 
   {
-  /*  if ( (D[i]>0) && (nrhs==1 || (R[i]>=1) ) )  D[i] = D[i] + (1 - V[I[i]]);
+  /*  if ( (D[i]>0) && (nrhs==1 || (R[i]>=1) ) )  D[i] = D[i] + (1 - V[II[i]]);
     if (D[i]<=0.5) D[i]=0; else D[i]=D[i]-0.5; */
-    I[i]++;
+    II[i]++;
   }
 
 }

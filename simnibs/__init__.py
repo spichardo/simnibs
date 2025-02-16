@@ -23,13 +23,13 @@ elif sys.platform == 'darwin':
     ])
 from ._version import __version__
 from .mesh_tools import *
-from .utils import transformations
-from .utils.transformations import *
-from .utils import file_finder
-from .utils.file_finder import *
-from .utils.nnav import localite, softaxic, brainsight, ant
-from .utils.mesh_element_properties import ElementTags
-from .simulation import sim_struct
-from .simulation import fem
-from .simulation.run_simnibs import run_simnibs
-from .optimization import opt_struct
+# from .utils import transformations
+# from .utils.transformations import *
+# from .utils import file_finder
+# from .utils.file_finder import *
+# from .utils.nnav import localite, softaxic, brainsight, ant
+# from .utils.mesh_element_properties import ElementTags
+# from .simulation import sim_struct
+# from .simulation import fem
+# from .simulation.run_simnibs import run_simnibs
+# from .optimization import opt_struct
